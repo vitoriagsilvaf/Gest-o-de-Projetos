@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Gestão de Projetos{% endblock %}
+{% block content %}
+<h2>Gestão de Projetos</h2>
+
+<a href="{{ url_for('arquivados') }}" class="btn btn-card" style="margin-bottom: 20px;">📦 Ver Arquivados</a>
+
+<form method="POST" action="{{ url_for('criar_projeto') }}" style="margin-bottom: 30px;">
+    <input type="text" name="nome" placeholder="Nome do Projeto" required>
+    <textarea name="descricao" placeholder="Descrição do Projeto" rows="2" required></textarea>
+    <button type="submit" class="btn btn-card">Criar Projeto</button>
+</form>
+
+<div class="kanban">
+    <div class="col">
+        <h3>Pendentes</h3>
+        {% for p in pendentes %}
+        <div class="card">
+            <h4>{{ p.nome }}</h4>
+            <p class="limitado">{{ p.descricao }}</p>
+            <div class="botoes">
+                <a href="{{ url_for('ver_projeto', projeto_id=p.id) }}" class="btn btn-card">🔍 Ver mais</a>
+                <a href="{{ url_for('excluir_projeto', projeto_id=p.id) }}" class="btn btn-card" onclick="return confirm('Deseja excluir este projeto?')">🗑️ Excluir</a>
+                <a href="{{ url_for('mover_projeto', projeto_id=p.id, novo_status='andamento') }}" class="btn btn-card">➡️ Andamento</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="col">
+        <h3>Em Andamento</h3>
+        {% for p in andamento %}
+        <div class="card andamento">
+            <h4>{{ p.nome }}</h4>
+            <p class="limitado">{{ p.descricao }}</p>
+            <div class="botoes">
+                <a href="{{ url_for('ver_projeto', projeto_id=p.id) }}" class="btn btn-card">🔍 Ver mais</a>
+                <a href="{{ url_for('excluir_projeto', projeto_id=p.id) }}" class="btn btn-card" onclick="return confirm('Deseja excluir este projeto?')">🗑️ Excluir</a>
+                <a href="{{ url_for('mover_projeto', projeto_id=p.id, novo_status='concluido') }}" class="btn btn-card">✅ Concluir</a>
+                <a href="{{ url_for('mover_projeto', projeto_id=p.id, novo_status='pendente') }}" class="btn btn-card">⏪ Voltar para Pendente</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="col">
+        <h3>Concluídos</h3>
+        {% for p in concluidos %}
+        <div class="card concluido">
+            <h4>{{ p.nome }}</h4>
+            <p class="limitado">{{ p.descricao }}</p>
+            <div class="botoes">
+                <a href="{{ url_for('ver_projeto', projeto_id=p.id) }}" class="btn btn-card">🔍 Ver mais</a>
+                <a href="{{ url_for('excluir_projeto', projeto_id=p.id) }}" class="btn btn-card" onclick="return confirm('Deseja excluir este projeto?')">🗑️ Excluir</a>
+                <a href="{{ url_for('arquivar_projeto', projeto_id=p.id) }}" class="btn btn-card">📦 Arquivar</a>
+                <a href="{{ url_for('mover_projeto', projeto_id=p.id, novo_status='andamento') }}" class="btn btn-card">⏪ Voltar para Andamento</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
