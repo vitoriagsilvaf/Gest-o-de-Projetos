@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Projetos Arquivados{% endblock %}
+{% block content %}
+<h2>Projetos Arquivados</h2>
+
+<form method="GET" action="{{ url_for('arquivados') }}">
+    <input type="text" name="busca" placeholder="Buscar projeto arquivado..." value="{{ request.args.get('busca', '') }}">
+    <button type="submit">🔍 Buscar</button>
+</form>
+
+<div class="kanban">
+    <div class="col" style="flex: 1;">
+        {% for projeto in projetos %}
+        <div class="card concluido">
+            <h4>{{ projeto.nome }}</h4>
+            <p>{{ projeto.descricao }}</p>
+            <a href="{{ url_for('ver_projeto', projeto_id=projeto.id) }}" class="btn">🔍 Ver mais</a>
+            <a href="{{ url_for('desarquivar_projeto', projeto_id=projeto.id) }}" class="btn">↩️ Desarquivar</a>
+            <a href="{{ url_for('excluir_projeto', projeto_id=projeto.id) }}" class="btn" onclick="return confirm('Deseja excluir este projeto arquivado?')">🗑️ Excluir</a>
+        </div>
+        {% else %}
+        <p>Nenhum projeto arquivado encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+<a href="{{ url_for('home') }}" class="btn">⬅ Voltar para Projetos</a>
+{% endblock %}
